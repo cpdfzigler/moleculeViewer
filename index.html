@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>JSmol -- Jmol/HTML5 Demo</title>
+  <script type="text/javascript" src="JSmol.min.js"></script>
+
+  <script type="text/javascript">
+    // Set up variables and configurations
+    var jmolApplet0;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const LP = urlParams.get("LP");
+
+    // Debugging configuration
+    Jmol.debugCode = (queryString.indexOf("debugcode") >= 0);
+
+    // Applet ready callback
+    function jmol_isReady(applet) {
+      document.title = `${applet._id} - Jmol ${___JmolVersion}`;
+      Jmol._getElement(applet, "appletdiv").style.border = "1px solid blue";
+    }
+
+    // Jmol Info object
+    var Info = {
+      width: 300,
+      height: 300,
+      debug: false,
+      color: "0xFFFFFF",
+      use: "HTML5",
+      j2sPath: "j2s",
+      readyFunction: jmol_isReady,
+      script: `set antialiasDisplay; load :${urlParams.get('molecule')}`,
+      disableJ2SLoadMonitor: true,
+      disableInitialConsole: true,
+      allowJavaScript: true
+    };
+
+    // Measurement functions
+    function toggleMeasurement(id, scriptTrue, scriptFalse) {
+      const isChecked = document.getElementById(id).checked;
+      const script = isChecked ? scriptTrue : scriptFalse;
+      Jmol.script(jmolApplet0, script);
+    }
+
+    function angles() {
+      toggleMeasurement("angles", "measure ALLCONNECTED (*)(*)(*)", "measure DELETE ALLCONNECTED (*)(*)(*)");
+    }
+
+    function MEP() {
+      toggleMeasurement("MEP", 
+        "if ({atomno < 10}.partialcharge == 0) {calculate partialcharge}; isosurface vdw map mep translucent", 
+        "isosurface delete"
+      );
+    }
+
+    function bond_dipoles() {
+      toggleMeasurement("bond_dipoles", "dipole bonds width 0.1", "dipole bonds delete");
+    }
+
+    function molecular_dipole() {
+      toggleMeasurement("molecular_dipole", "dipole molecular width 0.1", "dipole molecular delete");
+    }
+
+    function LPs() {
+      toggleMeasurement("LPs", LP, "lcaocartoon lonePair delete");
+    }
+
+
+</script>
+</head>
+<body>
+  <table>
+    <tr>
+      <td>
+        <input type="checkbox" id="angles" onchange="angles()">
+        <label for="angles">Bond Angles</label>
+        <br>
+
+        <div id="dipoles_div">
+          <input type="checkbox" id="bond_dipoles" onchange="bond_dipoles()">
+          <label for="bond_dipoles">Bond Dipoles</label>
+          <br>
+          <input type="checkbox" id="molecular_dipole" onchange="molecular_dipole()">
+          <label for="molecular_dipole">Molecular Dipole</label>
+          <br>
+        </div>
+
+        <div id="MEP_div">
+          <input type="checkbox" id="MEP" onchange="MEP()">
+          <label for="MEP">MEP</label>
+          <br>
+        </div>
+
+        <div id="LP_div">
+          <input type="checkbox" id="LPs" onchange="LPs()">
+          <label for="LPs">Lone Pairs</label>
+        </div>
+      </td>
+      <td>
+        <script type="text/javascript">
+          // Initialize the Jmol applet
+          jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+        </script>
+      </td>
+    </tr>
+  </table>
+
+  <script type="text/javascript">
+    // Hide unused divs based on URL parameters
+    if (LP == null) document.getElementById("LP_div").style.display = "none";
+    if (urlParams.get("MEP") == null) document.getElementById("MEP_div").style.display = "none";
+    if (urlParams.get("dipoles") == null) document.getElementById("dipoles_div").style.display = "none";
+  </script>
+</body>
+</html>
