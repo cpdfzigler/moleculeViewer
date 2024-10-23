@@ -1,24 +1,15 @@
-Clazz.declarePackage ("J.shape");
-Clazz.load (["J.shape.FontLineShape"], "J.shape.Uccage", null, function () {
-c$ = Clazz.declareType (J.shape, "Uccage", J.shape.FontLineShape);
-Clazz.overrideMethod (c$, "setProperty", 
-function (propertyName, value, bs) {
-this.setPropFLS (propertyName, value);
+Clazz.declarePackage("J.shape");
+Clazz.load(["J.shape.FontLineShape"], "J.shape.Uccage", null, function(){
+var c$ = Clazz.declareType(J.shape, "Uccage", J.shape.FontLineShape);
+Clazz.overrideMethod(c$, "setProperty", 
+function(propertyName, value, bs){
+this.setPropFLS(propertyName, value);
 }, "~S,~O,JU.BS");
-Clazz.defineMethod (c$, "getShapeState", 
-function () {
-if (!this.ms.haveUnitCells) return "";
-var s = Clazz.superCall (this, J.shape.Uccage, "getShapeState", []);
-var iAtom = this.vwr.am.cai;
-if (iAtom >= 0) s += "  unitcell ({" + iAtom + "});\n";
-var uc = this.vwr.getCurrentUnitCell ();
-if (uc != null) s += uc.getUnitCellState ();
-return s;
-});
-Clazz.defineMethod (c$, "initShape", 
-function () {
-Clazz.superCall (this, J.shape.Uccage, "initShape", []);
-this.font3d = this.gdata.getFont3D (14);
+Clazz.defineMethod(c$, "initShape", 
+function(){
+Clazz.superCall(this, J.shape.Uccage, "initShape", []);
+this.font3d = this.vwr.gdata.getFont3D(16);
 this.myType = "unitcell";
 });
 });
+;//5.0.1-v4 Wed Oct 09 10:23:43 CDT 2024

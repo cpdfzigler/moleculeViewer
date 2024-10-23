@@ -1,4 +1,3 @@
-Clazz.declarePackage ("J.api");
-Clazz.load (["J.api.JmolCallbackListener"], "J.api.JmolStatusListener", null, function () {
-Clazz.declareInterface (J.api, "JmolStatusListener", J.api.JmolCallbackListener);
-});
+Clazz.declarePackage("J.api");
+Clazz.declareInterface(J.api, "JmolStatusListener", J.api.JmolCallbackListener);
+;//5.0.1-v4 Wed Oct 09 10:23:43 CDT 2024

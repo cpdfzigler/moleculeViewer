@@ -1,28 +1,42 @@
-Clazz.declarePackage ("J.shape");
-Clazz.load (["J.shape.FontShape"], "J.shape.FontLineShape", null, function () {
-c$ = Clazz.decorateAsClass (function () {
+Clazz.declarePackage("J.shape");
+Clazz.load(["J.shape.Shape"], "J.shape.FontLineShape", null, function(){
+var c$ = Clazz.decorateAsClass(function(){
 this.tickInfos = null;
-this.mad = 0;
-Clazz.instantialize (this, arguments);
-}, J.shape, "FontLineShape", J.shape.FontShape);
-Clazz.prepareFields (c$, function () {
-this.tickInfos =  new Array (4);
+this.font3d = null;
+Clazz.instantialize(this, arguments);}, J.shape, "FontLineShape", J.shape.Shape);
+Clazz.overrideMethod(c$, "initShape", 
+function(){
+this.translucentAllowed = false;
 });
-Clazz.defineMethod (c$, "setPropFLS", 
-function (propertyName, value) {
+Clazz.defineMethod(c$, "setPropFLS", 
+function(propertyName, value){
 if ("tickInfo" === propertyName) {
 var t = value;
+var type = t.type;
 if (t.ticks == null) {
-if (t.type.equals (" ")) this.tickInfos[0] = this.tickInfos[1] = this.tickInfos[2] = this.tickInfos[3] = null;
- else this.tickInfos["xyz".indexOf (t.type) + 1] = null;
+if (t.type == ' ') {
+this.tickInfos = null;
 return;
-}this.tickInfos["xyz".indexOf (t.type) + 1] = t;
+}if (this.tickInfos != null) {
+var haveTicks = false;
+for (var i = 0; i < 4; i++) {
+if (this.tickInfos[i] != null && this.tickInfos[i].type == t.type) {
+this.tickInfos[i] = null;
+} else {
+haveTicks = true;
+}}
+if (!haveTicks) this.tickInfos = null;
+}return;
+}if (this.tickInfos == null) this.tickInfos =  new Array(4);
+this.tickInfos["xyz".indexOf(type) + 1] = t;
 return;
-}this.setPropFS (propertyName, value);
-}, "~S,~O");
-Clazz.overrideMethod (c$, "getShapeState", 
-function () {
-var s = this.vwr.getFontState (this.myType, this.font3d);
-return (this.tickInfos == null ? s : this.vwr.getFontLineShapeState (s, this.myType, this.tickInfos));
+}if ("font" === propertyName) {
+this.font3d = value;
+return;
+}}, "~S,~O");
+Clazz.overrideMethod(c$, "getShapeState", 
+function(){
+return null;
 });
 });
+;//5.0.1-v4 Wed Oct 09 10:23:43 CDT 2024
