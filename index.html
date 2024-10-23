@@ -12,7 +12,7 @@
     const urlParams = new URLSearchParams(queryString);
     const LP = urlParams.get("LP");
     const moleculeName = urlParams.get('molecule');
-    const localFile = `${moleculeName}.sdf`;
+    const localFile = `structuresSDF/${moleculeName}.sdf`;
     const pubChemSearch = `:${moleculeName}`;
 
     // Debugging configuration
