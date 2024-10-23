@@ -1,62 +1,60 @@
-Clazz.declarePackage ("J.adapter.readers.xml");
-Clazz.load (["J.adapter.readers.xml.XmlCmlReader"], "J.adapter.readers.xml.XmlMolproReader", null, function () {
-c$ = Clazz.decorateAsClass (function () {
-this.myAttributes = null;
-Clazz.instantialize (this, arguments);
-}, J.adapter.readers.xml, "XmlMolproReader", J.adapter.readers.xml.XmlCmlReader);
-Clazz.prepareFields (c$, function () {
-this.myAttributes = ["id", "length", "type", "x3", "y3", "z3", "elementType", "name", "groups", "cartesianLength", "primitives", "minL", "maxL", "angular", "contractions", "occupation", "energy", "symmetryID", "wavenumber", "units"];
-});
-Clazz.makeConstructor (c$, 
-function () {
+Clazz.declarePackage("J.adapter.readers.xml");
+Clazz.load(["J.adapter.readers.xml.XmlMOReader"], "J.adapter.readers.xml.XmlMolproReader", ["JU.PT"], function(){
+var c$ = Clazz.declareType(J.adapter.readers.xml, "XmlMolproReader", J.adapter.readers.xml.XmlMOReader);
+Clazz.makeConstructor(c$, 
+function(){
 Clazz.superConstructor (this, J.adapter.readers.xml.XmlMolproReader, []);
+this.dslist = "d0 d2- d1+ d2+ d1-";
+this.fclist = "XXX YYY ZZZ XXY XXZ XYY YYZ XZZ YZZ XYZ";
+this.fslist = "f1+ f1- f0 f3+ f2- f3- f2+";
+this.iHaveCoefMaps = true;
 });
-Clazz.overrideMethod (c$, "getDOMAttributes", 
-function () {
-return this.myAttributes;
-});
-Clazz.overrideMethod (c$, "processStartElement", 
-function (localName) {
+Clazz.overrideMethod(c$, "processStartElement", 
+function(localName, nodeName){
 if (!this.processing) return;
-this.processStart2 (localName);
-if (localName.equalsIgnoreCase ("normalCoordinate")) {
-this.keepChars = false;
-if (!this.parent.doGetVibration (++this.vibrationNumber)) return;
+this.processStart2(localName);
+if (!this.processStartMO(localName)) {
+if (localName.equals("normalcoordinate")) {
+this.setKeepChars(false);
+if (!this.parent.doGetVibration(++this.vibrationNumber)) return;
 try {
-this.asc.cloneLastAtomSet ();
+this.asc.cloneLastAtomSet();
 } catch (e) {
-if (Clazz.exceptionOf (e, Exception)) {
-System.out.println ("" + e);
-this.asc.errorMessage = "Error processing normalCoordinate: " + e.getMessage ();
+if (Clazz.exceptionOf(e, Exception)){
+System.out.println("" + e);
+this.asc.errorMessage = "Error processing normalCoordinate: " + e.getMessage();
 this.vibrationNumber = 0;
 return;
 } else {
 throw e;
 }
 }
-if (this.atts.containsKey ("wavenumber")) {
-var wavenumber = this.atts.get ("wavenumber");
+if (this.atts.containsKey("wavenumber")) {
+var wavenumber = this.atts.get("wavenumber");
 var units = "cm^-1";
-if (this.atts.containsKey ("units")) {
-units = this.atts.get ("units");
-if (units.startsWith ("inverseCent")) units = "cm^-1";
-}this.asc.setAtomSetFrequency (null, null, wavenumber, units);
-this.keepChars = true;
+if (this.atts.containsKey("units")) {
+units = this.atts.get("units");
+if (units.startsWith("inverseCent")) units = "cm^-1";
+}this.asc.setAtomSetFrequency(this.vibrationNumber, null, null, wavenumber, units);
+this.setKeepChars(true);
 }return;
-}if (localName.equals ("vibrations")) {
+}if (localName.equals("vibrations")) {
 this.vibrationNumber = 0;
 return;
-}}, "~S");
-Clazz.overrideMethod (c$, "processEndElement", 
-function (localName) {
-if (localName.equalsIgnoreCase ("normalCoordinate")) {
+}}}, "~S,~S");
+Clazz.overrideMethod(c$, "processEndElement", 
+function(localName){
+if (!this.processEndMO(localName)) {
+if (localName.equals("normalcoordinate")) {
 if (!this.keepChars) return;
-var ac = this.asc.getLastAtomSetAtomCount ();
-var baseAtomIndex = this.asc.getLastAtomSetAtomIndex ();
-this.tokens = J.adapter.smarter.AtomSetCollectionReader.getTokensStr (this.chars);
+var ac = this.asc.getLastAtomSetAtomCount();
+var baseAtomIndex = this.asc.getLastAtomSetAtomIndex();
+this.tokens = JU.PT.getTokens(this.chars.toString());
 for (var offset = this.tokens.length - ac * 3, i = 0; i < ac; i++) {
-this.asc.addVibrationVector (i + baseAtomIndex, this.parseFloatStr (this.tokens[offset++]), this.parseFloatStr (this.tokens[offset++]), this.parseFloatStr (this.tokens[offset++]));
+this.asc.addVibrationVector(i + baseAtomIndex, this.parseFloatStr(this.tokens[offset++]), this.parseFloatStr(this.tokens[offset++]), this.parseFloatStr(this.tokens[offset++]));
 }
-}this.processEnd2 (localName);
+this.setKeepChars(false);
+}}this.processEnd2(localName);
 }, "~S");
 });
+;//5.0.1-v4 Wed Oct 09 10:23:43 CDT 2024

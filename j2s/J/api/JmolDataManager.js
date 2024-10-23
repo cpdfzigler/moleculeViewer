@@ -1,8 +1,5 @@
-Clazz.declarePackage ("J.api");
-c$ = Clazz.declareInterface (J.api, "JmolDataManager");
-Clazz.defineStatics (c$,
-"DATA_TYPE_UNKNOWN", -1,
-"DATA_TYPE_STRING", 0,
-"DATA_TYPE_AF", 1,
-"DATA_TYPE_AFF", 2,
-"DATA_TYPE_AFFF", 3);
+Clazz.declarePackage("J.api");
+(function(){
+var c$ = Clazz.declareInterface(J.api, "JmolDataManager");
+})();
+;//5.0.1-v4 Wed Oct 09 10:23:43 CDT 2024
