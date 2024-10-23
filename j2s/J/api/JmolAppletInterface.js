@@ -1,3 +1,4 @@
-Clazz.declarePackage("J.api");
-Clazz.declareInterface(J.api, "JmolAppletInterface", J.api.JmolSyncInterface);
-;//5.0.1-v4 Wed Oct 09 10:23:43 CDT 2024
+Clazz.declarePackage ("J.api");
+Clazz.load (["J.api.JmolSyncInterface"], "J.api.JmolAppletInterface", null, function () {
+Clazz.declareInterface (J.api, "JmolAppletInterface", J.api.JmolSyncInterface);
+});
