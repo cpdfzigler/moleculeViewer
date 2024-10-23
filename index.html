@@ -11,6 +11,9 @@
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const LP = urlParams.get("LP");
+    const moleculeName = urlParams.get('molecule');
+    const localFile = `${moleculeName}.sdf`;
+    const pubChemSearch = `:${moleculeName}`;
 
     // Debugging configuration
     Jmol.debugCode = (queryString.indexOf("debugcode") >= 0);
@@ -30,11 +33,30 @@
       use: "HTML5",
       j2sPath: "j2s",
       readyFunction: jmol_isReady,
-      script: `set antialiasDisplay; load :${urlParams.get('molecule')}`,
       disableJ2SLoadMonitor: true,
       disableInitialConsole: true,
       allowJavaScript: true
     };
+
+    // Function to load the molecule, either from the local file or from PubChem
+    function loadMolecule() {
+      // Check if the local .sdf file exists
+      fetch(localFile, { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) {
+            // If the file exists, load it
+            Jmol.script(jmolApplet0, `load ${localFile}`);
+          } else {
+            // If the file does not exist, search PubChem
+            Jmol.script(jmolApplet0, `load ${pubChemSearch}`);
+          }
+        })
+        .catch(error => {
+          // If any error occurs (e.g., network issues), fall back to PubChem
+          console.error('Error checking file:', error);
+          Jmol.script(jmolApplet0, `load ${pubChemSearch}`);
+        });
+    }
 
     // Measurement functions
     function toggleMeasurement(id, scriptTrue, scriptFalse) {
@@ -66,8 +88,13 @@
       toggleMeasurement("LPs", LP, "lcaocartoon lonePair delete");
     }
 
+    // Initialize the Jmol applet and load the molecule
+    function initializeJmol() {
+      jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+      loadMolecule(); // Load the molecule after the applet is initialized
+    }
 
-</script>
+  </script>
 </head>
 <body>
   <table>
@@ -99,8 +126,8 @@
       </td>
       <td>
         <script type="text/javascript">
-          // Initialize the Jmol applet
-          jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+          // Initialize the Jmol applet and load the molecule
+          initializeJmol();
         </script>
       </td>
     </tr>
