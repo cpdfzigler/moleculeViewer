@@ -12,8 +12,12 @@
     const urlParams = new URLSearchParams(queryString);
     const LP = urlParams.get("LP");
     const moleculeName = urlParams.get('molecule');
-    const localFileSDF = `structuresSDF/${moleculeName}.sdf`;
-	const localFileXYZ = `structuresXYZ/${moleculeName}.xyz`;
+    // List directories to find local structures
+	const localFiles = [
+	    `structuresSDF/${moleculeName}.sdf`,
+		`structuresXYZ/${moleculeName}.xyz`
+	];
+	 
     const pubChemSearch = `:${moleculeName}`;
 
     // Debugging configuration
@@ -39,14 +43,25 @@
       allowJavaScript: true
     };
 
-    // Function to load the molecule, either from the local file or from PubChem
+    // Function to 
+	// Function to load the molecule, either from the local file or from PubChem
     function loadMolecule() {
-      // Check if the local .sdf file exists
-      fetch(localFileSDF, { method: 'HEAD' })
+      for (oneFile of localFiles) {
+	    try {
+		  const response = await fetch(oneFile);
+		    if (response.ok) {
+			  const localFile = oneFile;
+			} else {
+			  const localFile = 'dne/dne.dne'
+			  }
+		}
+	  }
+	  // Check if the local file exists
+      fetch(localFile, { method: 'HEAD' })
         .then(response => {
           if (response.ok) {
             // If the file exists, load it
-            Jmol.script(jmolApplet0, `load ${localFileSDF}`);
+            Jmol.script(jmolApplet0, `load ${localFile}`);
           } else {
             // If the file does not exist, search PubChem
             Jmol.script(jmolApplet0, `load ${pubChemSearch}`);
