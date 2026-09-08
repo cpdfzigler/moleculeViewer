@@ -48,13 +48,6 @@
             // If the file exists, load it
             Jmol.script(jmolApplet0, `load ${localFileSDF}`);
           } else {
-		    fetch(localFileXYZ, { method: 'HEAD' })
-			  .then(response => {
-			    if (response.ok) {
-                  // If the file exists, load it
-                  Jmol.script(jmolApplet0, `load ${localFileXYZ}`);
-				  }}
-          } else {
             // If the file does not exist, search PubChem
             Jmol.script(jmolApplet0, `load ${pubChemSearch}`);
           }
