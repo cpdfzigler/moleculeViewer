@@ -12,11 +12,6 @@
     const urlParams = new URLSearchParams(queryString);
     const LP = urlParams.get("LP");
     const moleculeName = urlParams.get('molecule');
-    // List directories to find local structures
-//	const localFiles = [
-//	    `structuresSDF/${moleculeName}.sdf`,
-//		`structuresXYZ/${moleculeName}.xyz`
-//	]; 
     const localFile = `structuresSDF/${moleculeName}.sdf`;
     const pubChemSearch = `:${moleculeName}`;
 
@@ -43,19 +38,8 @@
       allowJavaScript: true
     };
 
-    // Function to 
 	// Function to load the molecule, either from the local file or from PubChem
     function loadMolecule() {
-    //  for (oneFile of localFiles) {
-	//    try {
-	//	  const response = await fetch(oneFile);
-	//	    if (response.ok) {
-	//		  const localFile = oneFile;
-	//		} else {
-	//		  const localFile = 'dne/dne.dne'
-	//		  }
-	//	}
-	//  }
 	  // Check if the local file exists
       fetch(localFile, { method: 'HEAD' })
         .then(response => {
